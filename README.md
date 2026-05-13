@@ -20,7 +20,7 @@ Results, code, and methodology are all public. Surprising negatives are called o
 |--------------|-------------------------------|--------------------------------|------------------------------------------|
 | 1. Ingestion | batch 5.2M ev/s, Arrow 10.6M/s | batch 15.8M ev/s, Arrow 53.8M/s | Rust 3–5× faster; Python sufficient <1M ev/s |
 | 2. Features  | Polars 7.3M/s, Numba 34.3M/s  | hand-rolled 16.9M/s             | Numba > Rust > Polars-Py (all within 5×)  |
-| 3. Storage   | TBD                           | TBD                            | TBD                                      |
+| 3. Storage   | write 3.0M/s; Polars read 47.6M/s | write 4.3M/s; read 19.2M/s  | Rust faster writes; Polars-Py fastest reads |
 | 4. Query     | TBD                           | TBD                            | TBD                                      |
 | 5. Serving   | TBD                           | TBD                            | TBD                                      |
 
@@ -53,6 +53,21 @@ Results, code, and methodology are all public. Surprising negatives are called o
 | hand-rolled Rust     | 16.9M/s      | 2.3× Polars-Py                     |
 
 **Honest takeaway:** Python+Numba beats hand-rolled Rust by 2× on this workload. The LLVM JIT generates more aggressively optimized inner loops for this tight sliding-window pattern than rustc does at default settings. The lesson: "Rust" is not automatically faster than "Python" — the algorithm, data layout, and compiler backend all matter.
+
+## Stage 3 — Storage
+
+![Storage throughput](bench/plots/storage_write_throughput.png)
+
+**Write (100k rows, Snappy Parquet, hive-partitioned):**
+- Python (pyarrow): 3.0M rows/s
+- Rust (arrow-rs): **4.3M rows/s** — 1.4× faster
+
+**Read (100k rows, full scan):**
+- PyArrow dataset API: 10.8M rows/s
+- Rust (arrow-rs): 19.2M rows/s
+- Polars lazy (Python): **47.6M rows/s** — fastest of all three
+
+**Honest takeaway:** Rust wins on writes, but Polars lazy scan from Python outperforms both Rust arrow-rs and PyArrow dataset by 2–4×. The reason: Polars' parquet reader aggressively applies column projection and page-level skipping that the lower-level APIs don't activate by default. Cross-language compatibility confirmed — Python-written files are readable by Rust and vice versa.
 
 ---
 

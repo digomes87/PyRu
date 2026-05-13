@@ -968,8 +968,10 @@ dependencies = [
  "deltalake",
  "parquet 53.4.1",
  "serde",
+ "tempfile",
  "tokio",
  "tracing",
+ "walkdir",
 ]
 
 [[package]]
