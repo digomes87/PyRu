@@ -419,6 +419,91 @@ def plot_query_matrix() -> None:
     print(f"wrote {out}")
 
 
+def plot_serving_latency() -> None:
+    """Serving hot-path latency comparison — Python vs Rust."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError:
+        return
+
+    py_files = sorted(RESULTS_DIR.glob("serve_python_*.json"))
+    rs_files = sorted(RESULTS_DIR.glob("serve_rust_*.txt"))
+    if not py_files or not rs_files:
+        print("Need both Python and Rust serve results.")
+        return
+
+    py = _parse_python_json(py_files[-1])
+    rs = _parse_rust_txt(rs_files[-1])
+
+    # Python: cache hit (µs) from bench — use middle row as representative
+    py_hot_us = py.get("test_cache_hit_middle_row") or py.get("test_cache_hit_first_row")
+    py_cold_us = py.get("test_cold_duckdb_lookup")
+    # Rust: hashmap hit (ns) → µs
+    rs_hit_ns = rs.get("cache_lookup/hashmap_hit/10000") or rs.get("cache_lookup/hashmap_hit/1000")
+    rs_hit_us = (rs_hit_ns / 1000.0) if rs_hit_ns else None
+
+    if not (py_hot_us and py_cold_us and rs_hit_us):
+        print("Incomplete serve results.")
+        return
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig.suptitle("Serving — Hot-path cache lookup latency", fontsize=13, fontweight="bold")
+
+    # Bar chart: latency per path
+    ax = axes[0]
+    labels = ["Python\ncache hit\n(Polars filter)", "Python\ncold path\n(DuckDB)", "Rust\ncache hit\n(HashMap)"]
+    vals_us = [py_hot_us, py_cold_us, rs_hit_us]
+    colors = ["#0072B2", "#56B4E9", "#D55E00"]
+    bars = ax.bar(labels, vals_us, color=colors, width=0.55)
+    for bar, v in zip(bars, vals_us):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2,
+                f"{v:.1f} µs", ha="center", fontsize=9, fontweight="bold")
+    ax.set_yscale("log")
+    ax.set_ylabel("Latency µs (log scale)")
+    ax.set_title("Single lookup latency")
+
+    speedup = py_hot_us / rs_hit_us
+    ax.text(0.97, 0.97,
+            f"Rust {speedup:,.0f}× lower latency",
+            transform=ax.transAxes, ha="right", va="top", fontsize=9,
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="lightyellow"))
+
+    # Synthetic distribution at 10k concurrent requests (illustrative)
+    ax = axes[1]
+    rng = np.random.default_rng(42)
+    n = 10_000
+    # Python: lognormal around 154 µs with heavy tail
+    py_samples = rng.lognormal(mean=np.log(py_hot_us), sigma=0.4, size=n)
+    # Rust: tight exponential around 0.015 µs
+    rs_samples = rng.lognormal(mean=np.log(rs_hit_us), sigma=0.1, size=n)
+
+    percentiles = [50, 90, 95, 99, 99.9]
+    py_p = [np.percentile(py_samples, p) for p in percentiles]
+    rs_p = [np.percentile(rs_samples, p) for p in percentiles]
+    x = np.arange(len(percentiles))
+    w = 0.35
+    ax.bar(x - w / 2, py_p, w, label="Python", color="#0072B2")
+    ax.bar(x + w / 2, rs_p, w, label="Rust", color="#D55E00")
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"p{p}" for p in percentiles])
+    ax.set_yscale("log")
+    ax.set_ylabel("Latency µs (log scale, simulated)")
+    ax.set_title("Latency percentile distribution (synthetic)")
+    ax.legend()
+    ax.text(0.02, 0.97,
+            "Note: right chart is illustrative\nbased on measured kernel latencies",
+            transform=ax.transAxes, va="top", fontsize=7, style="italic", color="grey")
+
+    plt.tight_layout()
+    out = PLOTS_DIR / "serving_latency_distribution.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out}")
+
+
 def main() -> None:
     PLOTS_DIR.mkdir(exist_ok=True)
     print_summary()
@@ -426,6 +511,7 @@ def main() -> None:
     plot_features_five_way()
     plot_storage_comparison()
     plot_query_matrix()
+    plot_serving_latency()
 
 
 if __name__ == "__main__":
