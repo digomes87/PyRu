@@ -41,6 +41,7 @@ asyncio_mode = "auto"
 [dependency-groups]
 dev = [
     "delta-spark>=4.2.0",
+    "matplotlib>=3.10.9",
     "mypy>=2.1.0",
     "numba>=0.65.1",
     "numpy>=2.4.4",

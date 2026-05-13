@@ -14,15 +14,29 @@ Results, code, and methodology are all public. Surprising negatives are called o
 
 ---
 
-## Stages (results coming as each phase lands)
+## TL;DR results (updated per phase)
 
-| Stage            | Python result | Rust result | Verdict |
-|------------------|--------------|-------------|---------|
-| 1. Ingestion     | TBD          | TBD         | TBD     |
-| 2. Features      | TBD          | TBD         | TBD     |
-| 3. Storage       | TBD          | TBD         | TBD     |
-| 4. Query         | TBD          | TBD         | TBD     |
-| 5. Serving       | TBD          | TBD         | TBD     |
+| Stage        | Python                        | Rust                           | Verdict                                  |
+|--------------|-------------------------------|--------------------------------|------------------------------------------|
+| 1. Ingestion | batch 5.2M ev/s, Arrow 10.6M/s | batch 15.8M ev/s, Arrow 53.8M/s | Rust 3–5× faster; Python sufficient <1M ev/s |
+| 2. Features  | TBD                           | TBD                            | TBD                                      |
+| 3. Storage   | TBD                           | TBD                            | TBD                                      |
+| 4. Query     | TBD                           | TBD                            | TBD                                      |
+| 5. Serving   | TBD                           | TBD                            | TBD                                      |
+
+## Stage 1 — Ingestion
+
+![Ingestion throughput](bench/plots/ingest_throughput.png)
+
+**Batching pipeline (10k trades, batch=1000):**
+- Python asyncio: **5.2M events/sec**
+- Rust tokio: **15.8M events/sec** — 3.1× faster
+
+**Arrow batch conversion (10k trades):**
+- Python pyarrow: **10.6M trades/sec**
+- Rust arrow-rs: **53.8M trades/sec** — 5.1× faster
+
+**Honest takeaway:** For most workloads under ~500k events/sec, the Python asyncio pipeline is entirely adequate. The Rust advantage shows up at very high throughputs or when you need predictable tail latency — asyncio's event loop overhead is invisible at human scale but not at 10M+ events/sec. JSON parsing dominates `from_file` on both sides; switching to a binary format (Arrow IPC or msgpack) would equalize them.
 
 ---
 
