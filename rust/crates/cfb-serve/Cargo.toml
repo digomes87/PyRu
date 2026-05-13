@@ -26,3 +26,7 @@ tracing-subscriber = { workspace = true }
 [dev-dependencies]
 criterion = { workspace = true }
 tokio = { workspace = true }
+
+[[bench]]
+name = "bench_serve"
+harness = false
