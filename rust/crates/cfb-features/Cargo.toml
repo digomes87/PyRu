@@ -1,0 +1,26 @@
+[package]
+name = "cfb-features"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Feature computation: rolling VWAP, RV, OFI — Polars and hand-rolled Arrow implementations"
+
+[dependencies]
+cfb-ingest = { path = "../cfb-ingest" }
+arrow = { workspace = true }
+arrow-array = { workspace = true }
+arrow-schema = { workspace = true }
+polars = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+insta = { workspace = true }
+
+[[bench]]
+name = "bench_features"
+harness = false

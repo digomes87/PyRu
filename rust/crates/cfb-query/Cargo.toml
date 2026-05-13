@@ -1,0 +1,22 @@
+[package]
+name = "cfb-query"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Query engine: DataFusion and Polars backends over stored Parquet"
+
+[dependencies]
+cfb-storage = { path = "../cfb-storage" }
+datafusion = { workspace = true }
+polars = { workspace = true }
+arrow = { workspace = true }
+arrow-array = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+tokio = { workspace = true }

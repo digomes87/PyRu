@@ -1,0 +1,30 @@
+[package]
+name = "cfb-ingest"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Trade ingestion: WebSocket and file-based sources with Arrow batching"
+
+[dependencies]
+tokio = { workspace = true }
+tokio-tungstenite = { workspace = true }
+tokio-stream = { version = "0.1", features = ["io-util"] }
+async-stream = "0.3"
+arrow = { workspace = true }
+arrow-array = { workspace = true }
+arrow-schema = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+insta = { workspace = true }
+tokio = { workspace = true }
+
+[[bench]]
+name = "bench_ingest"
+harness = false
