@@ -1,0 +1,26 @@
+[
+  {
+    "ts": 1700000000000000000,
+    "symbol": "BTCUSDT",
+    "vwap_1m": 30000.0,
+    "vwap_5m": 30000.0,
+    "vwap_15m": 30000.0,
+    "rv_1m": 0.0,
+    "rv_5m": 0.0,
+    "ofi_1m": 1.0,
+    "microprice": null,
+    "trade_count_1m": 1
+  },
+  {
+    "ts": 1700000010000000000,
+    "symbol": "BTCUSDT",
+    "vwap_1m": 30000.0,
+    "vwap_5m": 30000.0,
+    "vwap_15m": 30000.0,
+    "rv_1m": 0.0,
+    "rv_5m": 0.0,
+    "ofi_1m": -2.0,
+    "microprice": null,
+    "trade_count_1m": 2
+  }
+]
