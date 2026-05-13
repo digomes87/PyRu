@@ -1,0 +1,50 @@
+[project]
+name = "cfb"
+version = "0.1.0"
+description = "Crypto features bench — Python implementation"
+readme = "README.md"
+authors = [
+    { name = "Diego Go", email = "diego.gomes87@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.5.2",
+    "fastapi>=0.136.1",
+    "httpx>=0.28.1",
+    "polars>=1.40.1",
+    "pyarrow>=24.0.0",
+    "pydantic>=2.13.4",
+    "uvicorn>=0.46.0",
+    "websockets>=16.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.8,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "ANN"]
+ignore = ["ANN101", "ANN102"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "delta-spark>=4.2.0",
+    "mypy>=2.1.0",
+    "numba>=0.65.1",
+    "numpy>=2.4.4",
+    "pandas>=3.0.3",
+    "pytest>=9.0.3",
+    "pytest-benchmark>=5.2.3",
+    "ruff>=0.15.12",
+]
