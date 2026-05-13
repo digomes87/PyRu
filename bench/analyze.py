@@ -185,10 +185,96 @@ def print_summary() -> None:
             print(f"  Arrow 10k:        Python {py_eps/1e6:.2f}M/s  Rust {rs_eps/1e6:.2f}M/s  (Rust {rs_eps/py_eps:.1f}×)")
 
 
+def plot_features_five_way() -> None:
+    """Generate the headline five-way feature computation comparison chart."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError:
+        return
+
+    py_files = sorted(RESULTS_DIR.glob("features_python_*.json"))
+    rs_files = sorted(RESULTS_DIR.glob("features_rust_*.txt"))
+    if not py_files or not rs_files:
+        print("Need both Python and Rust feature results.")
+        return
+
+    py = _parse_python_json(py_files[-1])
+    rs = _parse_rust_txt(rs_files[-1])
+
+    # All at 100k trades
+    # Python: bench name → µs for 100k trades
+    # Streaming: 10k×10 extrapolation (since 100k would take too long)
+    N = 100_000
+
+    polars_py_us = py.get("test_polars_100k")
+    numba_us = py.get("test_numba_100k")
+    # pandas is O(n²), skip 100k; use 1k for illustrative rate
+    pandas_us_1k = py.get("test_pandas_1k")
+
+    # Rust at 100k
+    rust_hand_us = rs.get("hand_rolled_arrow/100000")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    labels, eps_list, colors = [], [], []
+
+    if pandas_us_1k:
+        pandas_eps = 1_000 / (pandas_us_1k / 1e6)
+        labels.append("pandas\n(naive, 1k)")
+        eps_list.append(pandas_eps / 1e6)
+        colors.append("#CC79A7")
+
+    if polars_py_us:
+        polars_py_eps = N / (polars_py_us / 1e6)
+        labels.append("Polars\n(Python, 100k)")
+        eps_list.append(polars_py_eps / 1e6)
+        colors.append("#0072B2")
+
+    if numba_us:
+        numba_eps = N / (numba_us / 1e6)
+        labels.append("numpy+numba\n(Python, 100k)")
+        eps_list.append(numba_eps / 1e6)
+        colors.append("#009E73")
+
+    if rust_hand_us:
+        rust_eps = N / (rust_hand_us / 1e6)
+        labels.append("hand-rolled\n(Rust, 100k)")
+        eps_list.append(rust_eps / 1e6)
+        colors.append("#D55E00")
+
+    bars = ax.bar(labels, eps_list, color=colors, width=0.6)
+
+    for bar, v in zip(bars, eps_list):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.3,
+            f"{v:.1f}M/s",
+            ha="center", fontsize=10, fontweight="bold",
+        )
+
+    ax.set_ylabel("Trades / second (millions)")
+    ax.set_title(
+        "Feature computation throughput — five implementations\n"
+        "(Surprising: numba outperforms hand-rolled Rust at 100k scale)",
+        fontsize=11,
+    )
+    ax.set_ylim(bottom=0)
+    plt.tight_layout()
+
+    out = PLOTS_DIR / "features_five_way.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out}")
+
+
 def main() -> None:
     PLOTS_DIR.mkdir(exist_ok=True)
     print_summary()
     plot_ingest_comparison()
+    plot_features_five_way()
 
 
 if __name__ == "__main__":
