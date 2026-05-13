@@ -112,7 +112,7 @@ def compute_polars(df: pl.DataFrame) -> pl.DataFrame:
     lf = lf.with_columns([signed_qty, pv, one])
 
     def rsum(expr: pl.Expr, window_ns: int) -> pl.Expr:
-        return expr.rolling_sum_by("ts", window_size=f"{window_ns}ns")
+        return expr.rolling_sum_by("ts", window_size=f"{window_ns}i")
 
     lf = lf.with_columns([
         (rsum(pl.col("pv"), WINDOW_1M) / rsum(pl.col("qty"), WINDOW_1M)).alias("vwap_1m"),
