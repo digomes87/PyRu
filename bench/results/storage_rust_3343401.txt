@@ -1,0 +1,315 @@
+   Compiling smallvec v1.15.1
+   Compiling syn v2.0.117
+   Compiling chrono v0.4.39
+   Compiling num-bigint v0.4.6
+   Compiling siphasher v1.0.3
+   Compiling rand_core v0.6.4
+   Compiling regex-syntax v0.8.10
+   Compiling stable_deref_trait v1.2.1
+   Compiling flate2 v1.1.9
+   Compiling lexical-util v0.8.5
+   Compiling futures-sink v0.3.32
+   Compiling futures-io v0.3.32
+   Compiling litemap v0.8.2
+   Compiling writeable v0.6.3
+   Compiling utf8_iter v1.0.4
+   Compiling icu_properties_data v2.2.0
+   Compiling rand v0.8.6
+   Compiling futures-channel v0.3.32
+   Compiling parking_lot_core v0.9.12
+   Compiling phf_shared v0.11.3
+   Compiling icu_normalizer_data v2.2.0
+   Compiling doc-comment v0.3.4
+   Compiling twox-hash v2.1.2
+   Compiling heck v0.4.1
+   Compiling phf v0.11.3
+   Compiling parking_lot v0.12.5
+   Compiling lz4_flex v0.11.6
+   Compiling paste v1.0.15
+   Compiling snafu-derive v0.7.5
+   Compiling form_urlencoded v1.2.2
+   Compiling crossterm v0.29.0
+   Compiling lexical-parse-integer v0.8.6
+   Compiling phf_generator v0.11.3
+   Compiling lexical-write-integer v0.8.5
+   Compiling phf_codegen v0.11.3
+   Compiling lexical-parse-float v0.8.5
+   Compiling ordered-float v2.10.1
+   Compiling lexical-write-float v0.8.5
+   Compiling comfy-table v7.2.2
+   Compiling integer-encoding v3.0.4
+   Compiling regex-automata v0.4.14
+   Compiling num-rational v0.4.2
+   Compiling lexical-core v0.8.5
+   Compiling thrift v0.17.0
+   Compiling twox-hash v1.6.3
+   Compiling itertools v0.13.0
+   Compiling seq-macro v0.3.6
+   Compiling humantime v2.3.0
+   Compiling num v0.4.3
+   Compiling num_cpus v1.17.0
+   Compiling subtle v2.6.1
+   Compiling itertools v0.12.1
+   Compiling hex v0.4.3
+   Compiling digest v0.10.7
+   Compiling fixedbitset v0.4.2
+   Compiling bzip2-sys v0.1.13+1.0.8
+   Compiling now v0.1.3
+   Compiling lzma-sys v0.1.20
+   Compiling petgraph v0.6.5
+   Compiling regex v1.12.3
+   Compiling snafu v0.7.5
+   Compiling blake3 v1.8.5
+   Compiling parse-zoneinfo v0.3.1
+   Compiling anyhow v1.0.102
+   Compiling synstructure v0.13.2
+   Compiling chrono-tz-build v0.3.0
+   Compiling uuid v1.23.1
+   Compiling constant_time_eq v0.4.2
+   Compiling arrayvec v0.7.6
+   Compiling either v1.15.0
+   Compiling arrayref v0.3.9
+   Compiling md-5 v0.10.6
+   Compiling blake2 v0.10.6
+   Compiling chrono-tz v0.9.0
+   Compiling sha2 v0.10.9
+   Compiling sha1 v0.10.6
+   Compiling delta_kernel v0.3.0
+   Compiling fix-hidden-lifetime-bug-proc_macros v0.2.7
+   Compiling z85 v3.0.7
+   Compiling bzip2 v0.5.2
+   Compiling bzip2 v0.4.4
+   Compiling sqlparser v0.51.0
+   Compiling urlencoding v2.1.3
+   Compiling maplit v1.0.2
+   Compiling brotli v7.0.0
+   Compiling zerocopy-derive v0.8.48
+   Compiling serde_derive v1.0.228
+   Compiling zerofrom-derive v0.1.7
+   Compiling yoke-derive v0.8.2
+   Compiling zerovec-derive v0.11.3
+   Compiling tokio-macros v2.7.0
+   Compiling displaydoc v0.2.5
+   Compiling futures-macro v0.3.32
+   Compiling tokio v1.52.3
+   Compiling thiserror-impl v1.0.69
+   Compiling tracing-attributes v0.1.31
+   Compiling strum_macros v0.26.4
+   Compiling futures-util v0.3.32
+   Compiling bytemuck_derive v1.10.2
+   Compiling async-trait v0.1.89
+   Compiling zerofrom v0.1.8
+   Compiling zerocopy v0.8.48
+   Compiling thiserror v1.0.69
+   Compiling sqlparser_derive v0.2.2
+   Compiling tracing v0.1.44
+   Compiling ref-cast-impl v1.0.25
+   Compiling sqlparser v0.49.0
+   Compiling bytemuck v1.25.0
+   Compiling strum v0.26.3
+   Compiling ref-cast v1.0.25
+   Compiling recursive-proc-macro-impl v0.1.1
+   Compiling serde v1.0.228
+   Compiling recursive v0.1.1
+   Compiling yoke v0.8.2
+   Compiling fix-hidden-lifetime-bug v0.2.7
+   Compiling prost-derive v0.12.6
+   Compiling futures-executor v0.3.32
+   Compiling futures v0.3.32
+   Compiling visibility v0.1.1
+   Compiling delta_kernel_derive v0.3.1
+   Compiling async-stream-impl v0.3.6
+   Compiling async-stream v0.3.6
+   Compiling datafusion-common-runtime v41.0.0
+   Compiling prost v0.12.6
+   Compiling tokio-util v0.7.18
+   Compiling roaring v0.10.12
+   Compiling tokio-native-tls v0.3.1
+   Compiling tokio-stream v0.1.18
+   Compiling ahash v0.8.12
+   Compiling half v2.7.1
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_chacha v0.3.1
+   Compiling arrow-buffer v52.2.0
+   Compiling hashbrown v0.14.5
+   Compiling arrow-schema v52.2.0
+   Compiling polars-arrow-format v0.1.0
+   Compiling compact_str v0.8.1
+   Compiling zerovec v0.11.6
+   Compiling zerotrie v0.2.4
+   Compiling arrow-data v52.2.0
+   Compiling arrow-buffer v53.4.1
+   Compiling dashmap v6.1.0
+   Compiling arrow-array v52.2.0
+   Compiling arrow-data v53.4.1
+   Compiling halfbrown v0.2.5
+   Compiling polars-error v0.43.1
+   Compiling polars-utils v0.43.1
+   Compiling rand_distr v0.4.3
+   Compiling arrow-array v53.4.1
+   Compiling polars-schema v0.43.1
+   Compiling value-trait v0.8.1
+   Compiling polars-arrow v0.43.1
+   Compiling simd-json v0.13.11
+   Compiling tungstenite v0.24.0
+   Compiling tinystr v0.8.3
+   Compiling icu_locale_core v2.2.0
+   Compiling potential_utf v0.1.5
+   Compiling arrow-select v52.2.0
+   Compiling icu_collections v2.2.0
+   Compiling arrow-arith v52.2.0
+   Compiling arrow-row v52.2.0
+   Compiling icu_provider v2.2.0
+   Compiling arrow-cast v52.2.0
+   Compiling icu_properties v2.2.0
+   Compiling icu_normalizer v2.2.0
+   Compiling arrow-ord v52.2.0
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling arrow-string v52.2.0
+   Compiling arrow-ipc v52.2.0
+   Compiling url v2.5.8
+   Compiling object_store v0.10.2
+   Compiling arrow-json v52.2.0
+   Compiling arrow-csv v52.2.0
+   Compiling arrow v52.2.0
+   Compiling arrow-select v53.4.1
+   Compiling parquet v52.2.0
+   Compiling polars-compute v0.43.1
+   Compiling polars-row v0.43.1
+   Compiling polars-core v0.43.1
+   Compiling polars-parquet v0.43.1
+   Compiling arrow-cast v53.4.1
+   Compiling polars-json v0.43.1
+   Compiling datafusion-common v41.0.0
+   Compiling xz2 v0.1.7
+   Compiling async-compression v0.4.19
+   Compiling arrow-ipc v53.4.1
+   Compiling datafusion-expr v41.0.0
+   Compiling datafusion-execution v41.0.0
+   Compiling datafusion-physical-expr-common v41.0.0
+   Compiling datafusion-functions v41.0.0
+   Compiling datafusion-physical-expr v41.0.0
+   Compiling datafusion-functions-aggregate v41.0.0
+   Compiling datafusion-sql v41.0.0
+   Compiling polars-ops v0.43.1
+   Compiling datafusion-physical-plan v41.0.0
+   Compiling polars-time v0.43.1
+   Compiling datafusion-catalog v41.0.0
+   Compiling datafusion-physical-optimizer v41.0.0
+   Compiling polars-io v0.43.1
+   Compiling polars-plan v0.43.1
+   Compiling polars-expr v0.43.1
+   Compiling datafusion-functions-nested v41.0.0
+   Compiling datafusion-optimizer v41.0.0
+   Compiling datafusion v41.0.0
+   Compiling polars-mem-engine v0.43.1
+   Compiling datafusion-proto-common v41.0.0
+   Compiling arrow-json v53.4.1
+   Compiling arrow-csv v53.4.1
+   Compiling arrow-ord v53.4.1
+   Compiling arrow-string v53.4.1
+   Compiling arrow-arith v53.4.1
+   Compiling arrow-row v53.4.1
+   Compiling arrow v53.4.1
+   Compiling polars-lazy v0.43.1
+   Compiling tokio-tungstenite v0.24.0
+   Compiling cfb-ingest v0.1.0 (/Users/diegogo/Documents/Rust/crypto-features-bench/rust/crates/cfb-ingest)
+warning: unused import: `std::path::Path`
+ --> crates/cfb-ingest/src/source.rs:1:5
+  |
+1 | use std::path::Path;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling polars v0.43.1
+   Compiling ciborium-ll v0.2.2
+   Compiling ciborium v0.2.2
+   Compiling cfb-features v0.1.0 (/Users/diegogo/Documents/Rust/crypto-features-bench/rust/crates/cfb-features)
+warning: `cfb-ingest` (lib) generated 1 warning (run `cargo fix --lib -p cfb-ingest` to apply 1 suggestion)
+   Compiling parquet v53.4.1
+   Compiling tinytemplate v1.2.1
+   Compiling criterion v0.5.1
+   Compiling datafusion-proto v41.0.0
+   Compiling deltalake-core v0.21.0
+   Compiling deltalake v0.21.0
+   Compiling cfb-storage v0.1.0 (/Users/diegogo/Documents/Rust/crypto-features-bench/rust/crates/cfb-storage)
+warning: unused import: `PathBuf`
+ --> crates/cfb-storage/src/writer.rs:3:23
+  |
+3 | use std::path::{Path, PathBuf};
+  |                       ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Int32Array`
+ --> crates/cfb-storage/src/writer.rs:8:19
+  |
+8 |     Float64Array, Int32Array, Int64Array, RecordBatch, StringArray,
+  |                   ^^^^^^^^^^
+
+warning: unused import: `Encoding`
+  --> crates/cfb-storage/src/writer.rs:12:35
+   |
+12 | use parquet::basic::{Compression, Encoding};
+   |                                   ^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+ --> crates/cfb-storage/src/reader.rs:2:5
+  |
+2 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: struct `Partition` is never constructed
+  --> crates/cfb-storage/src/writer.rs:19:8
+   |
+19 | struct Partition {
+   |        ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `cfb-storage` (lib) generated 5 warnings (run `cargo fix --lib -p cfb-storage` to apply 4 suggestions)
+warning: `cfb-storage` (lib test) generated 5 warnings (5 duplicates)
+    Finished `bench` profile [optimized] target(s) in 1m 53s
+     Running unittests src/lib.rs (/Users/diegogo/Documents/Rust/crypto-features-bench/rust/target/release/deps/cfb_storage-5bba8951e0227fea)
+
+running 4 tests
+test tests::test_partition_directory_structure ... ignored
+test tests::test_read_roundtrip ... ignored
+test tests::test_symbol_filter ... ignored
+test tests::test_write_creates_parquet_files ... ignored
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/bench_storage.rs (/Users/diegogo/Documents/Rust/crypto-features-bench/rust/target/release/deps/bench_storage-cb5dc68db5301b3b)
+Gnuplot not found, using plotters backend
+Benchmarking storage_write/10000
+Benchmarking storage_write/10000: Warming up for 3.0000 s
+Benchmarking storage_write/10000: Collecting 100 samples in estimated 5.0110 s (1700 iterations)
+Benchmarking storage_write/10000: Analyzing
+storage_write/10000     time:   [2.4388 ms 2.4615 ms 2.4916 ms]
+                        thrpt:  [4.0136 Melem/s 4.0625 Melem/s 4.1004 Melem/s]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high severe
+Benchmarking storage_write/100000
+Benchmarking storage_write/100000: Warming up for 3.0000 s
+Benchmarking storage_write/100000: Collecting 100 samples in estimated 5.1726 s (200 iterations)
+Benchmarking storage_write/100000: Analyzing
+storage_write/100000    time:   [22.824 ms 23.022 ms 23.379 ms]
+                        thrpt:  [4.2774 Melem/s 4.3436 Melem/s 4.3814 Melem/s]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking storage_read/full_scan_100k
+Benchmarking storage_read/full_scan_100k: Warming up for 3.0000 s
+Benchmarking storage_read/full_scan_100k: Collecting 100 samples in estimated 5.2218 s (1000 iterations)
+Benchmarking storage_read/full_scan_100k: Analyzing
+storage_read/full_scan_100k
+                        time:   [5.2014 ms 5.2140 ms 5.2279 ms]
+                        thrpt:  [19.128 Melem/s 19.179 Melem/s 19.226 Melem/s]
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+
