@@ -21,7 +21,7 @@ Results, code, and methodology are all public. Surprising negatives are called o
 | 1. Ingestion | batch 5.2M ev/s, Arrow 10.6M/s | batch 15.8M ev/s, Arrow 53.8M/s | Rust 3–5× faster; Python sufficient <1M ev/s |
 | 2. Features  | Polars 7.3M/s, Numba 34.3M/s  | hand-rolled 16.9M/s             | Numba > Rust > Polars-Py (all within 5×)  |
 | 3. Storage   | write 3.0M/s; Polars read 47.6M/s | write 4.3M/s; read 19.2M/s  | Rust faster writes; Polars-Py fastest reads |
-| 4. Query     | TBD                           | TBD                            | TBD                                      |
+| 4. Query     | Polars 3–7ms; DuckDB 6–11ms   | TBD (DataFusion)               | Polars-Py wins all 5 queries vs DuckDB    |
 | 5. Serving   | TBD                           | TBD                            | TBD                                      |
 
 ## Stage 1 — Ingestion
@@ -53,6 +53,22 @@ Results, code, and methodology are all public. Surprising negatives are called o
 | hand-rolled Rust     | 16.9M/s      | 2.3× Polars-Py                     |
 
 **Honest takeaway:** Python+Numba beats hand-rolled Rust by 2× on this workload. The LLVM JIT generates more aggressively optimized inner loops for this tight sliding-window pattern than rustc does at default settings. The lesson: "Rust" is not automatically faster than "Python" — the algorithm, data layout, and compiler backend all matter.
+
+## Stage 4 — Query Engine
+
+![Query matrix](bench/plots/query_matrix.png)
+
+| Query | Polars (Python) | DuckDB (Python) | Winner |
+|-------|-----------------|-----------------|--------|
+| Q1 VWAP/min | 4.9ms | 9.1ms | Polars 1.9× |
+| Q2 Top symbols | 7.0ms | 10.5ms | Polars 1.5× |
+| Q3 RV distribution | 7.0ms | 9.9ms | Polars 1.4× |
+| Q4 Point lookup | **3.4ms** | 6.5ms | Polars 1.9× |
+| Q5 OFI momentum | 4.8ms | 9.1ms | Polars 1.9× |
+
+**Honest takeaway:** Polars beats DuckDB on all five queries at this dataset size. This is somewhat surprising because DuckDB's optimizer is excellent for complex SQL. The explanation: these queries are simple aggregations over Parquet that Polars' lazy engine handles via tight SIMD inner loops with minimal overhead. DuckDB's advantage emerges at larger datasets (billions of rows), complex multi-table joins, and window functions where its query planner's sophistication matters more. At 100k–10M rows with simple groupby patterns, Polars lazy is hard to beat from Python.
+
+---
 
 ## Stage 3 — Storage
 

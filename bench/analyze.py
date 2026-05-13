@@ -350,12 +350,82 @@ def plot_storage_comparison() -> None:
     print(f"wrote {out}")
 
 
+def plot_query_matrix() -> None:
+    """Heatmap of (engine × query) latency in ms."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError:
+        return
+
+    py_files = sorted(RESULTS_DIR.glob("query_python_*.json"))
+    if not py_files:
+        print("Need query_python_*.json results.")
+        return
+
+    py = _parse_python_json(py_files[-1])
+
+    queries = ["Q1\nvwap/min", "Q2\ntop syms", "Q3\nrv dist", "Q4\nlookup", "Q5\nofi"]
+    engines = ["Polars (Py)", "DuckDB (Py)"]
+
+    data_map = {
+        "Polars (Py)": {
+            "Q1": py.get("test_pols_q1"),
+            "Q2": py.get("test_pols_q2"),
+            "Q3": py.get("test_pols_q3"),
+            "Q4": py.get("test_pols_q4"),
+            "Q5": py.get("test_pols_q5"),
+        },
+        "DuckDB (Py)": {
+            "Q1": py.get("test_duck_q1"),
+            "Q2": py.get("test_duck_q2"),
+            "Q3": py.get("test_duck_q3"),
+            "Q4": py.get("test_duck_q4"),
+            "Q5": py.get("test_duck_q5"),
+        },
+    }
+
+    qs = ["Q1", "Q2", "Q3", "Q4", "Q5"]
+    matrix = np.array([
+        [data_map[eng].get(q, float("nan")) / 1000 for q in qs]  # ms
+        for eng in engines
+    ])
+
+    fig, ax = plt.subplots(figsize=(9, 3))
+    im = ax.imshow(matrix, cmap="YlOrRd", aspect="auto")
+
+    ax.set_xticks(range(len(qs)))
+    ax.set_xticklabels(queries, fontsize=9)
+    ax.set_yticks(range(len(engines)))
+    ax.set_yticklabels(engines)
+
+    for i in range(len(engines)):
+        for j in range(len(qs)):
+            v = matrix[i, j]
+            if not np.isnan(v):
+                ax.text(j, i, f"{v:.1f}ms", ha="center", va="center",
+                        fontsize=9, fontweight="bold",
+                        color="white" if v > matrix.max() * 0.6 else "black")
+
+    fig.colorbar(im, ax=ax, label="Latency (ms)")
+    ax.set_title("Query engine latency matrix — 100k rows (lower=better)", fontsize=11)
+    plt.tight_layout()
+
+    out = PLOTS_DIR / "query_matrix.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out}")
+
+
 def main() -> None:
     PLOTS_DIR.mkdir(exist_ok=True)
     print_summary()
     plot_ingest_comparison()
     plot_features_five_way()
     plot_storage_comparison()
+    plot_query_matrix()
 
 
 if __name__ == "__main__":
