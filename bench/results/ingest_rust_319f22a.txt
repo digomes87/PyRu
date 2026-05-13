@@ -1,0 +1,78 @@
+warning: unused import: `std::path::Path`
+ --> crates/cfb-ingest/src/source.rs:1:5
+  |
+1 | use std::path::Path;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `cfb-ingest` (lib) generated 1 warning (run `cargo fix --lib -p cfb-ingest` to apply 1 suggestion)
+warning: `cfb-ingest` (lib test) generated 1 warning (1 duplicate)
+    Finished `bench` profile [optimized] target(s) in 0.10s
+     Running unittests src/lib.rs (target/release/deps/cfb_ingest-d5b449c53e540dd7)
+
+running 6 tests
+test tests::test_arrow_batch_schema ... ignored
+test tests::test_batcher_empty_source ... ignored
+test tests::test_batcher_exact_size ... ignored
+test tests::test_batcher_partial_flush_at_end ... ignored
+test tests::test_from_file_reads_all ... ignored
+test tests::test_from_file_skips_blank_lines ... ignored
+
+test result: ok. 0 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/bench_ingest.rs (target/release/deps/bench_ingest-d108258f5f708ef4)
+Gnuplot not found, using plotters backend
+Benchmarking arrow_conversion/build_batch_from/1000
+Benchmarking arrow_conversion/build_batch_from/1000: Warming up for 3.0000 s
+Benchmarking arrow_conversion/build_batch_from/1000: Collecting 100 samples in estimated 5.0336 s (237k iterations)
+Benchmarking arrow_conversion/build_batch_from/1000: Analyzing
+arrow_conversion/build_batch_from/1000
+                        time:   [19.825 µs 19.861 µs 19.897 µs]
+                        thrpt:  [50.260 Melem/s 50.351 Melem/s 50.441 Melem/s]
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) low severe
+  3 (3.00%) low mild
+  2 (2.00%) high mild
+Benchmarking arrow_conversion/build_batch_from/10000
+Benchmarking arrow_conversion/build_batch_from/10000: Warming up for 3.0000 s
+Benchmarking arrow_conversion/build_batch_from/10000: Collecting 100 samples in estimated 5.6533 s (30k iterations)
+Benchmarking arrow_conversion/build_batch_from/10000: Analyzing
+arrow_conversion/build_batch_from/10000
+                        time:   [185.45 µs 185.90 µs 186.35 µs]
+                        thrpt:  [53.663 Melem/s 53.793 Melem/s 53.924 Melem/s]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+Benchmarking arrow_conversion/build_batch_from/100000
+Benchmarking arrow_conversion/build_batch_from/100000: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.5s, enable flat sampling, or reduce sample count to 50.
+Benchmarking arrow_conversion/build_batch_from/100000: Collecting 100 samples in estimated 9.4529 s (5050 iterations)
+Benchmarking arrow_conversion/build_batch_from/100000: Analyzing
+arrow_conversion/build_batch_from/100000
+                        time:   [1.8162 ms 1.8194 ms 1.8229 ms]
+                        thrpt:  [54.857 Melem/s 54.962 Melem/s 55.061 Melem/s]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+
+Benchmarking batching_pipeline/batch_size_1000/10000
+Benchmarking batching_pipeline/batch_size_1000/10000: Warming up for 3.0000 s
+Benchmarking batching_pipeline/batch_size_1000/10000: Collecting 100 samples in estimated 6.3821 s (10k iterations)
+Benchmarking batching_pipeline/batch_size_1000/10000: Analyzing
+batching_pipeline/batch_size_1000/10000
+                        time:   [631.76 µs 632.76 µs 633.84 µs]
+                        thrpt:  [15.777 Melem/s 15.804 Melem/s 15.829 Melem/s]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking batching_pipeline/batch_size_1000/100000
+Benchmarking batching_pipeline/batch_size_1000/100000: Warming up for 3.0000 s
+Benchmarking batching_pipeline/batch_size_1000/100000: Collecting 100 samples in estimated 5.5608 s (900 iterations)
+Benchmarking batching_pipeline/batch_size_1000/100000: Analyzing
+batching_pipeline/batch_size_1000/100000
+                        time:   [6.1693 ms 6.1794 ms 6.1900 ms]
+                        thrpt:  [16.155 Melem/s 16.183 Melem/s 16.209 Melem/s]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+

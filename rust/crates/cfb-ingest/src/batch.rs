@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::time::Duration;
 
 use anyhow::Result;
@@ -5,10 +6,9 @@ use arrow_array::{Float64Array, Int64Array, RecordBatch, StringArray};
 use arrow_schema::{DataType, Field, Schema};
 use tokio::sync::mpsc;
 use tokio::time::Instant;
-use tokio_stream::Stream;
-use tokio_stream::StreamExt;
+use tokio_stream::{Stream, StreamExt};
 
-use crate::Trade;
+use crate::{models::Side, Trade};
 
 pub struct BatchConfig {
     pub max_size: usize,
@@ -26,10 +26,7 @@ impl Default for BatchConfig {
     }
 }
 
-pub struct Batcher {
-    #[allow(dead_code)]
-    tx: mpsc::Sender<RecordBatch>,
-}
+pub struct Batcher;
 
 impl Batcher {
     pub fn spawn<S>(source: S, config: BatchConfig) -> (Self, mpsc::Receiver<RecordBatch>)
@@ -37,7 +34,6 @@ impl Batcher {
         S: Stream<Item = Result<Trade>> + Send + 'static,
     {
         let (tx, rx) = mpsc::channel(config.channel_capacity);
-        let tx_clone = tx.clone();
 
         tokio::spawn(async move {
             let mut buf: Vec<Trade> = Vec::with_capacity(config.max_size);
@@ -52,27 +48,27 @@ impl Batcher {
                             Some(Ok(trade)) => {
                                 buf.push(trade);
                                 if buf.len() >= config.max_size {
-                                    let batch = build_batch(std::mem::take(&mut buf));
-                                    if tx_clone.send(batch).await.is_err() { break; }
+                                    if tx.send(build_batch_from(&buf)).await.is_err() { break; }
+                                    buf.clear();
                                     deadline = Instant::now() + config.max_latency;
                                 }
                             }
-                            Some(Err(e)) => {
-                                tracing::warn!("ingest error: {e}");
-                            }
+                            Some(Err(e)) => tracing::warn!("ingest error: {e}"),
                             None => {
                                 if !buf.is_empty() {
-                                    let batch = build_batch(std::mem::take(&mut buf));
-                                    let _ = tx_clone.send(batch).await;
+                                    let _ = tx.send(build_batch_from(&buf)).await;
+                                    buf.clear();
                                 }
+                                // sentinel: empty batch
+                                let _ = tx.send(empty_batch()).await;
                                 break;
                             }
                         }
                     }
                     _ = tokio::time::sleep_until(deadline) => {
                         if !buf.is_empty() {
-                            let batch = build_batch(std::mem::take(&mut buf));
-                            if tx_clone.send(batch).await.is_err() { break; }
+                            if tx.send(build_batch_from(&buf)).await.is_err() { break; }
+                            buf.clear();
                         }
                         deadline = Instant::now() + config.max_latency;
                     }
@@ -80,19 +76,21 @@ impl Batcher {
             }
         });
 
-        (Self { tx }, rx)
+        (Self, rx)
     }
 }
 
-fn build_batch(trades: Vec<Trade>) -> RecordBatch {
-    let schema = Schema::new(vec![
+fn trade_schema() -> Arc<Schema> {
+    Arc::new(Schema::new(vec![
         Field::new("ts", DataType::Int64, false),
         Field::new("symbol", DataType::Utf8, false),
         Field::new("price", DataType::Float64, false),
         Field::new("qty", DataType::Float64, false),
         Field::new("side", DataType::Utf8, false),
-    ]);
+    ]))
+}
 
+pub fn build_batch_from(trades: &[Trade]) -> RecordBatch {
     let ts: Int64Array = trades.iter().map(|t| t.ts).collect();
     let symbol: StringArray = trades.iter().map(|t| Some(t.symbol.as_str())).collect();
     let price: Float64Array = trades.iter().map(|t| t.price).collect();
@@ -100,20 +98,24 @@ fn build_batch(trades: Vec<Trade>) -> RecordBatch {
     let side: StringArray = trades
         .iter()
         .map(|t| Some(match t.side {
-            crate::models::Side::Buy => "buy",
-            crate::models::Side::Sell => "sell",
+            Side::Buy => "buy",
+            Side::Sell => "sell",
         }))
         .collect();
 
     RecordBatch::try_new(
-        std::sync::Arc::new(schema),
+        trade_schema(),
         vec![
-            std::sync::Arc::new(ts),
-            std::sync::Arc::new(symbol),
-            std::sync::Arc::new(price),
-            std::sync::Arc::new(qty),
-            std::sync::Arc::new(side),
+            Arc::new(ts),
+            Arc::new(symbol),
+            Arc::new(price),
+            Arc::new(qty),
+            Arc::new(side),
         ],
     )
     .expect("schema matches arrays")
+}
+
+fn empty_batch() -> RecordBatch {
+    RecordBatch::new_empty(trade_schema())
 }
