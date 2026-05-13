@@ -270,11 +270,92 @@ def plot_features_five_way() -> None:
     print(f"wrote {out}")
 
 
+def plot_storage_comparison() -> None:
+    """Storage write/read throughput comparison."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError:
+        return
+
+    py_files = sorted(RESULTS_DIR.glob("storage_python_*.json"))
+    rs_files = sorted(RESULTS_DIR.glob("storage_rust_*.txt"))
+    if not py_files or not rs_files:
+        print("Need both Python and Rust storage results.")
+        return
+
+    py = _parse_python_json(py_files[-1])
+    rs = _parse_rust_txt(rs_files[-1])
+
+    # write 100k rows
+    py_write_us = py.get("test_write_100k")
+    rs_write_us = rs.get("storage_write/100000")
+    # read 100k rows
+    py_read_pyarrow_us = py.get("test_read_scan_100k")
+    py_read_polars_us = py.get("test_read_scan_polars_lazy_100k")
+    rs_read_us = rs.get("storage_read/full_scan_100k")
+
+    N = 100_000
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig.suptitle("Storage — Write and Read throughput (100k rows)", fontsize=13, fontweight="bold")
+
+    # Write
+    ax = axes[0]
+    labels, vals, colors = [], [], []
+    if py_write_us:
+        labels.append("Python\n(pyarrow)")
+        vals.append(N / (py_write_us / 1e6) / 1e6)
+        colors.append("#0072B2")
+    if rs_write_us:
+        labels.append("Rust\n(arrow-rs)")
+        vals.append(N / (rs_write_us / 1e6) / 1e6)
+        colors.append("#D55E00")
+    bars = ax.bar(labels, vals, color=colors, width=0.5)
+    for bar, v in zip(bars, vals):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
+                f"{v:.1f}M/s", ha="center", fontsize=10, fontweight="bold")
+    ax.set_ylabel("Rows written / sec (millions)")
+    ax.set_title("Write throughput (Snappy Parquet)")
+    ax.set_ylim(bottom=0)
+
+    # Read
+    ax = axes[1]
+    labels, vals, colors = [], [], []
+    if py_read_pyarrow_us:
+        labels.append("PyArrow\ndataset API")
+        vals.append(N / (py_read_pyarrow_us / 1e6) / 1e6)
+        colors.append("#56B4E9")
+    if py_read_polars_us:
+        labels.append("Polars lazy\n(Python)")
+        vals.append(N / (py_read_polars_us / 1e6) / 1e6)
+        colors.append("#0072B2")
+    if rs_read_us:
+        labels.append("Rust\n(arrow-rs)")
+        vals.append(N / (rs_read_us / 1e6) / 1e6)
+        colors.append("#D55E00")
+    bars = ax.bar(labels, vals, color=colors, width=0.5)
+    for bar, v in zip(bars, vals):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.3,
+                f"{v:.1f}M/s", ha="center", fontsize=10, fontweight="bold")
+    ax.set_ylabel("Rows read / sec (millions)")
+    ax.set_title("Read throughput (full scan, predicate on symbol)")
+    ax.set_ylim(bottom=0)
+
+    plt.tight_layout()
+    out = PLOTS_DIR / "storage_write_throughput.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out}")
+
+
 def main() -> None:
     PLOTS_DIR.mkdir(exist_ok=True)
     print_summary()
     plot_ingest_comparison()
     plot_features_five_way()
+    plot_storage_comparison()
 
 
 if __name__ == "__main__":
