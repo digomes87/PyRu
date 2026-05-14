@@ -1,5 +1,7 @@
 # crypto-features-bench
 
+**[github.com/digomes87/PyRu](https://github.com/digomes87/PyRu)** · MIT
+
 **A reproducible, honest comparison of Python and Rust across a five-stage crypto feature engineering pipeline.**
 
 > *"This person can ship production data infrastructure and reason rigorously about trade-offs."*
@@ -215,3 +217,7 @@ Rust took 1.6× longer to write. That cost is justified at > 10M events/sec or s
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+**Repository:** [https://github.com/digomes87/PyRu](https://github.com/digomes87/PyRu)
