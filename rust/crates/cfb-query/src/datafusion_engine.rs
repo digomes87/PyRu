@@ -20,7 +20,10 @@ impl DataFusionEngine {
         )
         .await?;
 
-        Ok(Self { ctx, base_path: base })
+        Ok(Self {
+            ctx,
+            base_path: base,
+        })
     }
 
     pub async fn execute(&self, sql: &str) -> Result<Vec<arrow_array::RecordBatch>> {

@@ -1,7 +1,7 @@
-pub mod models;
-pub mod streaming;
-pub mod polars_impl;
 pub mod arrow_impl;
+pub mod models;
+pub mod polars_impl;
+pub mod streaming;
 
 pub use models::FeatureRow;
 pub use streaming::compute_stream;
@@ -9,7 +9,7 @@ pub use streaming::compute_stream;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use cfb_ingest::{Trade, models::Side};
+    use cfb_ingest::{models::Side, Trade};
 
     fn trade(ts: i64, price: f64, qty: f64, side: &str) -> Trade {
         Trade {
@@ -71,7 +71,10 @@ mod tests {
         assert!((rows[1].rv_1m - expected_rv1).abs() < TOL, "rv at row 1");
 
         let expected_vwap2 = (30000.0 * 1.0 + 30300.0 * 2.0 + 29900.0 * 1.5) / (1.0 + 2.0 + 1.5);
-        assert!((rows[2].vwap_1m.unwrap() - expected_vwap2).abs() < TOL, "vwap at row 2");
+        assert!(
+            (rows[2].vwap_1m.unwrap() - expected_vwap2).abs() < TOL,
+            "vwap at row 2"
+        );
     }
 
     #[test]
@@ -84,9 +87,15 @@ mod tests {
         let rows = compute_stream(&events);
         assert_eq!(rows.len(), 2);
         // trade 1 expired from 1m window
-        assert!(approx_eq(rows[1].vwap_1m, Some(31000.0)), "1m window should only have trade 2");
+        assert!(
+            approx_eq(rows[1].vwap_1m, Some(31000.0)),
+            "1m window should only have trade 2"
+        );
         // trade 1 still in 5m window
         let expected_vwap5 = (30000.0 * 5.0 + 31000.0 * 2.0) / 7.0;
-        assert!((rows[1].vwap_5m.unwrap() - expected_vwap5).abs() < TOL, "5m window includes both");
+        assert!(
+            (rows[1].vwap_5m.unwrap() - expected_vwap5).abs() < TOL,
+            "5m window includes both"
+        );
     }
 }

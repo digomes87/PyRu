@@ -34,6 +34,10 @@ ignore = ["ANN101", "ANN102", "ANN401"]
 python_version = "3.12"
 strict = true
 
+[[tool.mypy.overrides]]
+module = ["pandas.*", "numba.*"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"

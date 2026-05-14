@@ -1,8 +1,8 @@
-pub mod writer;
 pub mod reader;
+pub mod writer;
 
-pub use writer::{build_feature_batch, feature_schema, write_partitioned};
 pub use reader::read_partitioned;
+pub use writer::{build_feature_batch, feature_schema, write_partitioned};
 
 #[cfg(test)]
 mod tests {
@@ -81,14 +81,28 @@ mod tests {
         let tmp = TempDir::new().unwrap();
         // Two symbols at the same ts
         let batch_btc = build_feature_batch(
-            vec![BASE_TS], vec!["BTCUSDT"],
-            vec![Some(30_000.0)], vec![None], vec![None],
-            vec![0.0], vec![0.0], vec![1.0], vec![None], vec![1],
+            vec![BASE_TS],
+            vec!["BTCUSDT"],
+            vec![Some(30_000.0)],
+            vec![None],
+            vec![None],
+            vec![0.0],
+            vec![0.0],
+            vec![1.0],
+            vec![None],
+            vec![1],
         );
         let batch_eth = build_feature_batch(
-            vec![BASE_TS], vec!["ETHUSDT"],
-            vec![Some(1_800.0)], vec![None], vec![None],
-            vec![0.0], vec![0.0], vec![1.0], vec![None], vec![1],
+            vec![BASE_TS],
+            vec!["ETHUSDT"],
+            vec![Some(1_800.0)],
+            vec![None],
+            vec![None],
+            vec![0.0],
+            vec![0.0],
+            vec![1.0],
+            vec![None],
+            vec![1],
         );
         write_partitioned(&batch_btc, tmp.path(), 0).unwrap();
         write_partitioned(&batch_eth, tmp.path(), 1).unwrap();

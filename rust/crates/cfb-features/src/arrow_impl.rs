@@ -62,7 +62,12 @@ impl WindowState {
             self.qty_sum -= q;
             self.ofi_sum -= sq;
         }
-        while self.sq_ret_buf.front().map(|e| e.0 < cutoff).unwrap_or(false) {
+        while self
+            .sq_ret_buf
+            .front()
+            .map(|e| e.0 < cutoff)
+            .unwrap_or(false)
+        {
             let (_, sr) = self.sq_ret_buf.pop_front().unwrap();
             self.sq_ret_sum -= sr;
         }
@@ -139,7 +144,9 @@ pub fn compute_arrow(trades: &[Trade]) -> RecordBatch {
         Arc::new(schema),
         vec![
             Arc::new(Int64Array::from(ts_out)),
-            Arc::new(StringArray::from_iter_values(symbol_out.iter().map(|s| s.as_str()))),
+            Arc::new(StringArray::from_iter_values(
+                symbol_out.iter().map(|s| s.as_str()),
+            )),
             Arc::new(Float64Array::from(vwap_1m_out)),
             Arc::new(Float64Array::from(vwap_5m_out)),
             Arc::new(Float64Array::from(vwap_15m_out)),

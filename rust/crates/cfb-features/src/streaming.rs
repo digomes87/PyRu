@@ -34,7 +34,11 @@ impl SymbolState {
 
         let w1m: Vec<&Trade> = self.buf.iter().filter(|t| t.ts >= ts - WINDOW_1M).collect();
         let w5m: Vec<&Trade> = self.buf.iter().filter(|t| t.ts >= ts - WINDOW_5M).collect();
-        let w15m: Vec<&Trade> = self.buf.iter().filter(|t| t.ts >= ts - WINDOW_15M).collect();
+        let w15m: Vec<&Trade> = self
+            .buf
+            .iter()
+            .filter(|t| t.ts >= ts - WINDOW_15M)
+            .collect();
 
         let row = FeatureRow {
             ts,

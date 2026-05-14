@@ -26,10 +26,11 @@ impl PolarsEngine {
         let df = self
             .scan()
             .filter(col("symbol").eq(lit(symbol)))
-            .with_column((col("ts") / lit(60_000_000_000i64) * lit(60_000_000_000i64)).alias("minute"))
+            .with_column(
+                (col("ts") / lit(60_000_000_000i64) * lit(60_000_000_000i64)).alias("minute"),
+            )
             .group_by([col("minute")])
-            .agg([(col("vwap_1m") * col("trade_count_1m")).sum()
-                / col("trade_count_1m").sum()])
+            .agg([(col("vwap_1m") * col("trade_count_1m")).sum() / col("trade_count_1m").sum()])
             .sort(["minute"], Default::default())
             .collect()?;
         Ok(df)

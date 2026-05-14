@@ -32,7 +32,10 @@ struct FeatureCache {
 
 impl FeatureCache {
     fn new() -> Self {
-        Self { rows: HashMap::new(), loaded_at: None }
+        Self {
+            rows: HashMap::new(),
+            loaded_at: None,
+        }
     }
 
     fn get(&self, symbol: &str, ts: i64) -> Option<&FeatureRow> {
@@ -107,7 +110,10 @@ async fn get_features(
         if let Some(row) = cache.get(&symbol, ts) {
             return (
                 StatusCode::OK,
-                Json(serde_json::json!(FeatureResponse { row: row.clone(), source: "cache" })),
+                Json(serde_json::json!(FeatureResponse {
+                    row: row.clone(),
+                    source: "cache"
+                })),
             );
         }
     }
@@ -132,7 +138,10 @@ async fn load_cache(State(state): State<AppState>) -> impl IntoResponse {
     // using cfb-storage::read_partitioned and populate the cache.
     cache.loaded_at = Some(Instant::now());
 
-    (StatusCode::OK, Json(serde_json::json!({ "loaded": cache.len() })))
+    (
+        StatusCode::OK,
+        Json(serde_json::json!({ "loaded": cache.len() })),
+    )
 }
 
 // ---------------------------------------------------------------------------

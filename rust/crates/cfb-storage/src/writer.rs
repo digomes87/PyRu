@@ -4,9 +4,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use arrow_array::{
-    Float64Array, Int32Array, Int64Array, RecordBatch, StringArray,
-};
+use arrow_array::{Float64Array, Int32Array, Int64Array, RecordBatch, StringArray};
 use arrow_schema::{DataType, Field, Schema};
 use parquet::arrow::ArrowWriter;
 use parquet::basic::{Compression, Encoding};
@@ -81,13 +79,16 @@ fn take_rows(batch: &RecordBatch, indices: &[usize]) -> Result<RecordBatch> {
     use arrow_array::{Array, ArrayRef};
 
     fn take_col(col: &dyn Array, idxs: &[usize]) -> ArrayRef {
-        let idx_arr = arrow_array::Int64Array::from(
-            idxs.iter().map(|&i| i as i64).collect::<Vec<_>>(),
-        );
+        let idx_arr =
+            arrow_array::Int64Array::from(idxs.iter().map(|&i| i as i64).collect::<Vec<_>>());
         arrow::compute::take(col, &idx_arr, None).expect("take")
     }
 
-    let columns: Vec<ArrayRef> = batch.columns().iter().map(|c| take_col(c.as_ref(), indices)).collect();
+    let columns: Vec<ArrayRef> = batch
+        .columns()
+        .iter()
+        .map(|c| take_col(c.as_ref(), indices))
+        .collect();
     Ok(RecordBatch::try_new(Arc::clone(&batch.schema()), columns)?)
 }
 

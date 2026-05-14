@@ -216,7 +216,7 @@ def compute_numba(
     except ImportError as e:
         raise RuntimeError("numba not installed") from e
 
-    @nb.njit(cache=True)
+    @nb.njit(cache=True)  # type: ignore[untyped-decorator]
     def _compute_nb(ts: Any, price: Any, qty: Any, signed_qty: Any) -> tuple[Any, ...]:
         n = len(ts)
         vwap_1m = np.empty(n)

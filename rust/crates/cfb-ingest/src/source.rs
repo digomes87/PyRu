@@ -8,7 +8,9 @@ use tokio_stream::StreamExt;
 
 use crate::Trade;
 
-pub fn from_file(path: impl Into<std::path::PathBuf> + Send) -> impl Stream<Item = Result<Trade>> + Send {
+pub fn from_file(
+    path: impl Into<std::path::PathBuf> + Send,
+) -> impl Stream<Item = Result<Trade>> + Send {
     let path = path.into();
     async_stream::stream! {
         let file = tokio::fs::File::open(&path).await?;

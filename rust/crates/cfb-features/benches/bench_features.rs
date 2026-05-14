@@ -1,9 +1,6 @@
 use std::hint::black_box;
 
-use cfb_features::{
-    arrow_impl::compute_arrow,
-    compute_stream,
-};
+use cfb_features::{arrow_impl::compute_arrow, compute_stream};
 use cfb_ingest::synth::make_trades;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 

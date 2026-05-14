@@ -55,8 +55,8 @@ class FeatureResponse(BaseModel):
 
 def _load_cache() -> pl.DataFrame:
     import pyarrow.dataset as ds
-    dataset = ds.dataset(str(_base_path), format="parquet", partitioning="hive")
-    return pl.from_arrow(dataset.to_table())
+    dataset = ds.dataset(str(_base_path), format="parquet", partitioning="hive")  # type: ignore[no-untyped-call]
+    return pl.from_arrow(dataset.to_table())  # type: ignore[return-value]
 
 
 def _get_cache() -> pl.DataFrame | None:
@@ -90,7 +90,7 @@ async def get_features(symbol: str, ts: int) -> FeatureResponse:
         if len(row) > 0:
             r = row.row(0, named=True)
             fields = {k: r.get(k) for k in FeatureResponse.model_fields}
-            return FeatureResponse(**fields, source="cache")
+            return FeatureResponse(**fields, source="cache")  # type: ignore[arg-type]
 
     # Cold path: DuckDB scan
     import duckdb

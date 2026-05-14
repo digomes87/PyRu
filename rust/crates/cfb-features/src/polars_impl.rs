@@ -56,7 +56,8 @@ pub fn compute_polars(df: DataFrame) -> Result<DataFrame> {
         .map(
             |s| {
                 let ca = s.f64()?;
-                let out: Float64Chunked = ca.apply(|v| v.map(|x| if x > 0.0 { x.ln() } else { 0.0 }));
+                let out: Float64Chunked =
+                    ca.apply(|v| v.map(|x| if x > 0.0 { x.ln() } else { 0.0 }));
                 Ok(Some(out.into_series()))
             },
             GetOutput::from_type(DataType::Float64),

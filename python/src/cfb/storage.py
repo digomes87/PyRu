@@ -13,6 +13,7 @@ from pathlib import Path
 
 import polars as pl
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
@@ -34,7 +35,7 @@ _FEATURE_SCHEMA = pa.schema([
     pa.field("trade_count_1m", pa.int64(), nullable=False),
 ])
 
-_PARQUET_WRITE_OPTS: dict = {
+_PARQUET_WRITE_OPTS: dict[str, object] = {
     "compression": "snappy",
     "use_dictionary": True,
 }
@@ -43,9 +44,9 @@ _PARQUET_WRITE_OPTS: dict = {
 def _derive_partitions(ts_col: pa.Array) -> tuple[pa.Array, pa.Array]:
     """Compute date and hour partition columns from a nanosecond timestamp array."""
     ts = ts_col.cast(pa.int64())
-    date_arr = pa.compute.divide(ts, pa.scalar(_NS_PER_DAY, pa.int64()))
-    hour_arr = pa.compute.divide(
-        pa.compute.subtract(ts, pa.compute.multiply(date_arr, pa.scalar(_NS_PER_DAY, pa.int64()))),
+    date_arr = pc.divide(ts, pa.scalar(_NS_PER_DAY, pa.int64()))  # type: ignore[attr-defined]
+    hour_arr = pc.divide(  # type: ignore[attr-defined]
+        pc.subtract(ts, pc.multiply(date_arr, pa.scalar(_NS_PER_DAY, pa.int64()))),  # type: ignore[attr-defined]
         pa.scalar(_NS_PER_HOUR, pa.int64()),
     )
     return date_arr.cast(pa.int32()), hour_arr.cast(pa.int32())
@@ -90,7 +91,7 @@ def write_partitioned(
     table = table.append_column("date", date_arr)
     table = table.append_column("hour", hour_arr)
 
-    pq.write_to_dataset(
+    pq.write_to_dataset(  # type: ignore[no-untyped-call]
         table,
         root_path=str(base),
         partition_cols=["symbol", "date", "hour"],
@@ -113,15 +114,15 @@ def read_partitioned(
     date_from / date_to are integer day epochs (ts // _NS_PER_DAY).
     """
     base = Path(base_path)
-    dataset = ds.dataset(str(base), format="parquet", partitioning="hive")
+    dataset = ds.dataset(str(base), format="parquet", partitioning="hive")  # type: ignore[no-untyped-call]
 
-    filters: list[ds.Expression] = []
+    filters: list[ds.Expression] = []  # type: ignore[name-defined]
     if symbol is not None:
-        filters.append(ds.field("symbol") == symbol)
+        filters.append(ds.field("symbol") == symbol)  # type: ignore[attr-defined, no-untyped-call]
     if date_from is not None:
-        filters.append(ds.field("date") >= date_from)
+        filters.append(ds.field("date") >= date_from)  # type: ignore[attr-defined, no-untyped-call]
     if date_to is not None:
-        filters.append(ds.field("date") <= date_to)
+        filters.append(ds.field("date") <= date_to)  # type: ignore[attr-defined, no-untyped-call]
 
     filt = None
     for f in filters:
@@ -130,7 +131,7 @@ def read_partitioned(
     table = dataset.to_table(filter=filt)
     # Drop partition columns added by write_to_dataset
     drop = [c for c in ["date", "hour"] if c in table.schema.names]
-    return pl.from_arrow(table.drop_columns(drop) if drop else table)
+    return pl.from_arrow(table.drop_columns(drop) if drop else table)  # type: ignore[return-value]
 
 
 def scan_partitioned(

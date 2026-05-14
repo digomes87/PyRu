@@ -97,10 +97,12 @@ pub fn build_batch_from(trades: &[Trade]) -> RecordBatch {
     let qty: Float64Array = trades.iter().map(|t| t.qty).collect();
     let side: StringArray = trades
         .iter()
-        .map(|t| Some(match t.side {
-            Side::Buy => "buy",
-            Side::Sell => "sell",
-        }))
+        .map(|t| {
+            Some(match t.side {
+                Side::Buy => "buy",
+                Side::Sell => "sell",
+            })
+        })
         .collect();
 
     RecordBatch::try_new(

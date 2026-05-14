@@ -1,11 +1,11 @@
+pub mod batch;
 pub mod models;
 pub mod source;
-pub mod batch;
 pub mod synth;
 
+pub use batch::{BatchConfig, Batcher};
 pub use models::{Side, Trade};
 pub use source::{from_file, from_iter, from_websocket};
-pub use batch::{BatchConfig, Batcher};
 
 #[cfg(test)]
 mod tests {
@@ -83,15 +83,20 @@ mod tests {
                 .unwrap();
             batches.push(ts_arr.values().to_vec());
         }
-        batches.iter().map(|v| {
-            v.iter().map(|&ts| trade(ts, 30000.0, 1.0, "buy")).collect()
-        }).collect()
+        batches
+            .iter()
+            .map(|v| v.iter().map(|&ts| trade(ts, 30000.0, 1.0, "buy")).collect())
+            .collect()
     }
 
     #[tokio::test]
     async fn test_batcher_exact_size() {
         let trades: Vec<Trade> = (0..10).map(|i| trade(i, 30000.0, 1.0, "buy")).collect();
-        let cfg = BatchConfig { max_size: 5, max_latency: std::time::Duration::from_secs(10), ..Default::default() };
+        let cfg = BatchConfig {
+            max_size: 5,
+            max_latency: std::time::Duration::from_secs(10),
+            ..Default::default()
+        };
         let batches = run_batcher(trades, cfg).await;
         assert_eq!(batches.len(), 2);
         assert!(batches.iter().all(|b| b.len() == 5));
@@ -100,7 +105,11 @@ mod tests {
     #[tokio::test]
     async fn test_batcher_partial_flush_at_end() {
         let trades: Vec<Trade> = (0..7).map(|i| trade(i, 30000.0, 1.0, "buy")).collect();
-        let cfg = BatchConfig { max_size: 5, max_latency: std::time::Duration::from_secs(10), ..Default::default() };
+        let cfg = BatchConfig {
+            max_size: 5,
+            max_latency: std::time::Duration::from_secs(10),
+            ..Default::default()
+        };
         let batches = run_batcher(trades, cfg).await;
         assert_eq!(batches.len(), 2);
         assert_eq!(batches[0].len(), 5);
@@ -121,8 +130,16 @@ mod tests {
         let trades = vec![trade(1_000_000_000, 30_100.5, 0.5, "sell")];
         let batch = build_batch_from(&trades);
         assert_eq!(batch.num_rows(), 1);
-        assert_eq!(batch.schema().field_with_name("ts").unwrap().data_type(), &arrow_schema::DataType::Int64);
-        let side = batch.column_by_name("side").unwrap().as_any().downcast_ref::<StringArray>().unwrap();
+        assert_eq!(
+            batch.schema().field_with_name("ts").unwrap().data_type(),
+            &arrow_schema::DataType::Int64
+        );
+        let side = batch
+            .column_by_name("side")
+            .unwrap()
+            .as_any()
+            .downcast_ref::<StringArray>()
+            .unwrap();
         assert_eq!(side.value(0), "sell");
     }
 }

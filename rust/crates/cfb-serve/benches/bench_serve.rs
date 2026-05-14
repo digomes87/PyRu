@@ -45,16 +45,12 @@ fn bench_cache_lookup(c: &mut Criterion) {
 
         group.throughput(Throughput::Elements(1));
         group.bench_with_input(BenchmarkId::new("hashmap_hit", n), &key, |b, k| {
-            b.iter(|| {
-                black_box(cache.get(black_box(k))).is_some()
-            });
+            b.iter(|| black_box(cache.get(black_box(k))).is_some());
         });
 
         let miss_key = ("BTCUSDT".to_owned(), 0i64);
         group.bench_with_input(BenchmarkId::new("hashmap_miss", n), &miss_key, |b, k| {
-            b.iter(|| {
-                black_box(cache.get(black_box(k))).is_none()
-            });
+            b.iter(|| black_box(cache.get(black_box(k))).is_none());
         });
     }
 
