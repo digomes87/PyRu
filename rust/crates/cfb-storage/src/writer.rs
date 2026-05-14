@@ -1,22 +1,17 @@
 use std::collections::HashMap;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use arrow_array::{Float64Array, Int32Array, Int64Array, RecordBatch, StringArray};
+use arrow_array::{Float64Array, Int64Array, RecordBatch, StringArray};
 use arrow_schema::{DataType, Field, Schema};
 use parquet::arrow::ArrowWriter;
-use parquet::basic::{Compression, Encoding};
+use parquet::basic::Compression;
 use parquet::file::properties::{WriterProperties, WriterVersion};
 
 const NS_PER_DAY: i64 = 86_400_000_000_000;
 const NS_PER_HOUR: i64 = 3_600_000_000_000;
-
-/// One in-memory partition bucket.
-struct Partition {
-    rows: Vec<usize>, // indices into the source batch
-}
 
 /// Write a feature RecordBatch to hive-partitioned Parquet.
 ///
@@ -93,6 +88,7 @@ fn take_rows(batch: &RecordBatch, indices: &[usize]) -> Result<RecordBatch> {
 }
 
 /// Build a feature RecordBatch from parallel vecs — used in tests and benches.
+#[allow(clippy::too_many_arguments)]
 pub fn build_feature_batch(
     ts: Vec<i64>,
     symbol: Vec<&str>,

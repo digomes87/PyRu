@@ -37,7 +37,7 @@ mod tests {
         let parquet_files: Vec<_> = walkdir::WalkDir::new(tmp.path())
             .into_iter()
             .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().map_or(false, |x| x == "parquet"))
+            .filter(|e| e.path().extension().is_some_and(|x| x == "parquet"))
             .collect();
         assert_eq!(parquet_files.len(), 5, "one file per hour");
     }
@@ -51,7 +51,7 @@ mod tests {
         for entry in walkdir::WalkDir::new(tmp.path())
             .into_iter()
             .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().map_or(false, |x| x == "parquet"))
+            .filter(|e| e.path().extension().is_some_and(|x| x == "parquet"))
         {
             let parts: Vec<String> = entry
                 .path()

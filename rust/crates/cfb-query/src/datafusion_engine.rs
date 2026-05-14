@@ -5,6 +5,7 @@ use datafusion::prelude::*;
 
 pub struct DataFusionEngine {
     ctx: SessionContext,
+    #[allow(dead_code)]
     base_path: String,
 }
 

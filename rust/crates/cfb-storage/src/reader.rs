@@ -1,5 +1,4 @@
 use std::path::Path;
-use std::sync::Arc;
 
 use anyhow::Result;
 use arrow_array::RecordBatch;
@@ -21,7 +20,7 @@ pub fn read_partitioned(base_path: &Path, symbol_filter: Option<&str>) -> Result
     for entry in walkdir::WalkDir::new(base_path)
         .into_iter()
         .filter_map(|e| e.ok())
-        .filter(|e| e.path().extension().map_or(false, |ext| ext == "parquet"))
+        .filter(|e| e.path().extension().is_some_and(|ext| ext == "parquet"))
     {
         let path = entry.path();
 
@@ -29,7 +28,7 @@ pub fn read_partitioned(base_path: &Path, symbol_filter: Option<&str>) -> Result
         if let Some(sym) = symbol_filter {
             let in_sym_dir = path.ancestors().any(|a| {
                 a.file_name()
-                    .map_or(false, |n| n.to_string_lossy() == format!("symbol={sym}"))
+                    .is_some_and(|n| n.to_string_lossy() == format!("symbol={sym}"))
             });
             if !in_sym_dir {
                 continue;

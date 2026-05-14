@@ -42,6 +42,7 @@ impl FeatureCache {
         self.rows.get(&(symbol.to_owned(), ts))
     }
 
+    #[allow(dead_code)]
     fn insert(&mut self, row: FeatureRow) {
         self.rows.insert((row.symbol.clone(), row.ts), row);
     }
@@ -131,7 +132,7 @@ async fn get_features(
 }
 
 async fn load_cache(State(state): State<AppState>) -> impl IntoResponse {
-    let path = state.data_path.as_str();
+    let _path = state.data_path.as_str();
     let mut cache = state.cache.write().await;
 
     // Stub: in a full implementation this would scan the Parquet files

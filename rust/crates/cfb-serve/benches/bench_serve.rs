@@ -7,6 +7,7 @@ const BASE_TS: i64 = 1_700_000_000_000_000_000i64;
 const NS_PER_S: i64 = 1_000_000_000;
 
 #[derive(Clone)]
+#[allow(dead_code)]
 struct FeatureRow {
     ts: i64,
     symbol: String,
