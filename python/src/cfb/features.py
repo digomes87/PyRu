@@ -149,8 +149,8 @@ def compute_polars(df: pl.DataFrame) -> pl.DataFrame:
 
 def compute_pandas(df: Any) -> Any:
     """Feature computation using pandas rolling. Requires pandas installed."""
-    import pandas as pd
     import numpy as np
+    import pandas as pd
 
     df = df.sort_values("ts").reset_index(drop=True)
     ts = df["ts"].values
@@ -202,7 +202,9 @@ def compute_pandas(df: Any) -> Any:
 # numpy + numba hand-tuned implementation
 # ---------------------------------------------------------------------------
 
-def compute_numba(trades_arr: Any, ts_arr: Any, price_arr: Any, qty_arr: Any, side_arr: Any) -> dict[str, Any]:
+def compute_numba(
+    trades_arr: Any, ts_arr: Any, price_arr: Any, qty_arr: Any, side_arr: Any
+) -> dict[str, Any]:
     """Feature computation using numba JIT for maximum Python-side throughput.
 
     Inputs are numpy arrays (ts: int64, price/qty: float64, side: int8 where 1=buy,-1=sell).
@@ -256,11 +258,16 @@ def compute_numba(trades_arr: Any, ts_arr: Any, price_arr: Any, qty_arr: Any, si
             sq_i = sq_ret[i]
 
             # add to windows
-            pv1 += pv_i; pv5 += pv_i; pv15 += pv_i
-            q1 += qty[i]; q5 += qty[i]; q15 += qty[i]
+            pv1 += pv_i
+            pv5 += pv_i
+            pv15 += pv_i
+            q1 += qty[i]
+            q5 += qty[i]
+            q15 += qty[i]
             ofi1 += signed_qty[i]
             cnt1 += 1
-            rv1_sum += sq_i; rv5_sum += sq_i
+            rv1_sum += sq_i
+            rv5_sum += sq_i
 
             # evict from 1m
             while lo1 <= i and ts[lo1] < t - W1:

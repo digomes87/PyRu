@@ -9,11 +9,9 @@ if they exist, or generate them on the fly.
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 import polars as pl
-import pytest
 
 from cfb.models import FeatureRow
 from cfb.storage import read_partitioned, write_partitioned

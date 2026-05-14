@@ -116,7 +116,9 @@ def test_q3_rv_distribution(duckdb_engine: DuckDBEngine, polars_engine: PolarsEn
 # Q4 — Point lookup
 # ---------------------------------------------------------------------------
 
-def test_q4_point_lookup_finds_row(duckdb_engine: DuckDBEngine, polars_engine: PolarsEngine) -> None:
+def test_q4_point_lookup_finds_row(
+    duckdb_engine: DuckDBEngine, polars_engine: PolarsEngine
+) -> None:
     ts = BASE_TS  # first trade
     duck = duckdb_engine.q4_point_lookup("BTCUSDT", ts)
     pols = polars_engine.q4_point_lookup("BTCUSDT", ts)

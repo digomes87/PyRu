@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 
 import polars as pl
-import pytest
 
 from cfb.models import FeatureRow
 from cfb.storage import read_partitioned, scan_partitioned, write_partitioned

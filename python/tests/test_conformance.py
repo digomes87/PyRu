@@ -43,12 +43,24 @@ def _float_eq(a: float | None, b: float | None) -> bool:
 def _assert_row(got: FeatureRow, exp: dict, idx: int) -> None:
     assert got.ts == exp["ts"], f"row {idx}: ts mismatch"
     assert got.symbol == exp["symbol"], f"row {idx}: symbol mismatch"
-    assert _float_eq(got.vwap_1m, exp["vwap_1m"]), f"row {idx}: vwap_1m {got.vwap_1m} != {exp['vwap_1m']}"
-    assert _float_eq(got.vwap_5m, exp["vwap_5m"]), f"row {idx}: vwap_5m {got.vwap_5m} != {exp['vwap_5m']}"
-    assert _float_eq(got.vwap_15m, exp["vwap_15m"]), f"row {idx}: vwap_15m {got.vwap_15m} != {exp['vwap_15m']}"
-    assert _float_eq(got.rv_1m, exp["rv_1m"]), f"row {idx}: rv_1m {got.rv_1m} != {exp['rv_1m']}"
-    assert _float_eq(got.rv_5m, exp["rv_5m"]), f"row {idx}: rv_5m {got.rv_5m} != {exp['rv_5m']}"
-    assert _float_eq(got.ofi_1m, exp["ofi_1m"]), f"row {idx}: ofi_1m {got.ofi_1m} != {exp['ofi_1m']}"
+    assert _float_eq(got.vwap_1m, exp["vwap_1m"]), (
+        f"row {idx}: vwap_1m {got.vwap_1m} != {exp['vwap_1m']}"
+    )
+    assert _float_eq(got.vwap_5m, exp["vwap_5m"]), (
+        f"row {idx}: vwap_5m {got.vwap_5m} != {exp['vwap_5m']}"
+    )
+    assert _float_eq(got.vwap_15m, exp["vwap_15m"]), (
+        f"row {idx}: vwap_15m {got.vwap_15m} != {exp['vwap_15m']}"
+    )
+    assert _float_eq(got.rv_1m, exp["rv_1m"]), (
+        f"row {idx}: rv_1m {got.rv_1m} != {exp['rv_1m']}"
+    )
+    assert _float_eq(got.rv_5m, exp["rv_5m"]), (
+        f"row {idx}: rv_5m {got.rv_5m} != {exp['rv_5m']}"
+    )
+    assert _float_eq(got.ofi_1m, exp["ofi_1m"]), (
+        f"row {idx}: ofi_1m {got.ofi_1m} != {exp['ofi_1m']}"
+    )
     assert _float_eq(got.microprice, exp["microprice"]), f"row {idx}: microprice mismatch"
     assert got.trade_count_1m == exp["trade_count_1m"], f"row {idx}: trade_count_1m mismatch"
 

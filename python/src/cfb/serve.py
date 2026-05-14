@@ -17,11 +17,10 @@ from __future__ import annotations
 import os
 import time
 from pathlib import Path
-from typing import Annotated
 
 import polars as pl
 import uvicorn
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from cfb.models import FeatureRow
@@ -90,7 +89,8 @@ async def get_features(symbol: str, ts: int) -> FeatureResponse:
         )
         if len(row) > 0:
             r = row.row(0, named=True)
-            return FeatureResponse(**{k: r.get(k) for k in FeatureResponse.model_fields}, source="cache")
+            fields = {k: r.get(k) for k in FeatureResponse.model_fields}
+            return FeatureResponse(**fields, source="cache")
 
     # Cold path: DuckDB scan
     import duckdb
